@@ -1,0 +1,16 @@
+.App {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.App input {
+  margin: 5px;
+  padding: 5px;
+}
+
+.App button {
+  margin: 5px;
+  padding: 5px;
+}
