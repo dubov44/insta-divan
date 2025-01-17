@@ -1,6 +1,15 @@
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = 'http://localhost:5000/api'; //process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+
+// Add auth header to requests
+axios.interceptors.request.use(request => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
+  return request;
+});
 
 // Add request interceptor for debugging
 axios.interceptors.request.use(request => {

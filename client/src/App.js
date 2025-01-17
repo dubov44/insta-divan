@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import EntityManager from './components/EntityManager';
+import Login from './components/Login';
 import api from './services/api';
 
 const App = () => {
@@ -11,6 +12,14 @@ const App = () => {
   const [newEntity, setNewEntity] = useState({ id: '', role: '', topics: [] });
   const [topicInput, setTopicInput] = useState('');
   const [editingTopics, setEditingTopics] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchEntities = async () => {
@@ -23,6 +32,19 @@ const App = () => {
     };
     fetchEntities();
   }, []);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+  };
+
+  if (!isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   const handleAddEntity = async () => {
     if (!newEntity.id) {
@@ -99,20 +121,29 @@ const App = () => {
   };
 
   return (
-    <EntityManager
-      entities={entities}
-      newEntity={newEntity}
-      topicInput={topicInput}
-      editingTopics={editingTopics}
-      setNewEntity={setNewEntity}
-      setTopicInput={setTopicInput}
-      handleAddEntity={handleAddEntity}
-      handleEditTopics={handleEditTopics}
-      handleAddTopic={handleAddTopic}
-      handleDeleteTopic={handleDeleteTopic}
-      handleDeleteEntity={handleDeleteEntity}
-      handleConvertToJSON={handleConvertToJSON}
-    />
+    <div>
+      <button 
+        onClick={handleLogout}
+        className="btn btn-danger m-2"
+        style={{ position: 'absolute', top: 0, right: 0 }}
+      >
+        Logout
+      </button>
+      <EntityManager
+        entities={entities}
+        newEntity={newEntity}
+        topicInput={topicInput}
+        editingTopics={editingTopics}
+        setNewEntity={setNewEntity}
+        setTopicInput={setTopicInput}
+        handleAddEntity={handleAddEntity}
+        handleEditTopics={handleEditTopics}
+        handleAddTopic={handleAddTopic}
+        handleDeleteTopic={handleDeleteTopic}
+        handleDeleteEntity={handleDeleteEntity}
+        handleConvertToJSON={handleConvertToJSON}
+      />
+    </div>
   );
 };
 
