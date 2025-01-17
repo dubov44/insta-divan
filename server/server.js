@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const connectDB = require('./config/db');
+const { router: authRouter, verifyToken } = require('./routes/auth');
 require('dotenv').config();
 
 const app = express();
@@ -22,8 +23,11 @@ app.use(cors({
 // Middleware
 app.use(express.json());
 
-// Routes
-app.use('/api/entities', require('./routes/entities'));
+// Auth routes (no token required)
+app.use('/api/auth', authRouter);
+
+// Protected routes (token required)
+app.use('/api/entities', verifyToken, require('./routes/entities'));
 
 const PORT = process.env.PORT || 5000;
 
